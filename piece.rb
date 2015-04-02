@@ -14,11 +14,7 @@ class Piece
 
     return false unless legal_move?(to_pos)
     if (to_pos[0] - current_x).abs == 1 &&  (to_pos[1] - current_y).abs == 1
-      if board[to_pos].nil?
-        return true
-      else
-        return false
-      end
+      return true if board[to_pos].nil?
     end
     false
   end
@@ -29,31 +25,32 @@ class Piece
     return false unless legal_move?(to_pos)
     return false unless check_next_squre?(to_pos)
     if (to_pos[0] - current_x).abs == 2 &&  (to_pos[1] - current_y).abs == 2
-      if board[to_pos].nil?
-        return true
-      else
-        return false
-      end
+      return true if board[to_pos].nil?
     end
     false
   end
 
   def legal_move?(to_pos)
-
-    if to_pos[0].between?(0,7) &&  to_pos[1].between?(0,7)
-      return true
-    else
-      return false
-    end
+    board.valid_move(to_pos)
   end
 
   def check_next_squre?(to_pos)
-    if direction(to_pos) == :right
+    if direction(to_pos) == :right && diff(to_pos) == :up
       next_x, next_y = pos[0] - 1, pos[1] + 1
       return false if board[[next_x, next_y]].nil?
       return false if board[[next_x, next_y]].color == color
-    else
+    elsif direction(to_pos) == :left && diff(to_pos) == :up
       next_x, next_y = pos[0] -1, pos[1] - 1
+      return false if board[[next_x, next_y]].nil?
+      return false if board[[next_x, next_y]].color == color
+
+    end
+    if direction(to_pos) == :right && diff(to_pos) == :down
+      next_x, next_y = pos[0] + 1, pos[1] + 1
+      return false if board[[next_x, next_y]].nil?
+      return false if board[[next_x, next_y]].color == color
+    elsif direction(to_pos) == :left && diff(to_pos) == :down
+      next_x, next_y = pos[0]  + 1, pos[1] - 1
       return false if board[[next_x, next_y]].nil?
       return false if board[[next_x, next_y]].color == color
 
@@ -67,6 +64,14 @@ class Piece
       return :left
     else
       return :right
+    end
+  end
+
+  def diff(to_pos)
+    if pos[0] > to_pos[0]
+      return :up
+    else
+      return :down
     end
   end
 end
@@ -93,8 +98,7 @@ class Board
 
   end
 
-  def move(from_pos, to_pos, color)
-
+  def valid_move(to_pos)
+    to_pos[0].between?(0,7) && to_pos[1].between?(0,7)
   end
-
 end

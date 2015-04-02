@@ -1,5 +1,5 @@
 require './board'
-TRANSLATION_HASH = {
+LATTER_HASH = {
    "a" => 0,
    "b" => 1,
    "c" => 2,
@@ -45,6 +45,8 @@ class Game
    until moved
      puts "#{color.to_s.capitalize}'s turn to move."
      from_pos, to_pos = get_move
+     print " from_pos #{from_pos}"
+     print " to_pos #{to_pos}"
      moved = @board.make_legal_move(from_pos, to_pos, color)
    end
  end
@@ -52,10 +54,10 @@ class Game
  def get_move
    puts "Enter a move "
    from_position, to_position = gets.chomp.split(":")
-   from_col = TRANSLATION_HASH[from_position[0]]
-   from_row = TRANSLATION_HASH[from_position[1]]
-   to_col = TRANSLATION_HASH[to_position[0]]
-   to_row = TRANSLATION_HASH[to_position[1]]
+   from_col = LATTER_HASH[from_position[0]]
+   from_row = LATTER_HASH[from_position[1]]
+   to_col = LATTER_HASH[to_position[0]]
+   to_row = LATTER_HASH[to_position[1]]
 
    [[from_row,from_col],[to_row,to_col]]
  end

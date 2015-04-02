@@ -1,6 +1,9 @@
 load 'piece.rb'
 load 'game.rb'
 load 'board.rb'
+
+board = Game.new
+board.play
 board = Board.new
 p = Piece.new(board, :white, [7,1],false)
 board[[7,1]] = p

@@ -21,14 +21,14 @@ class Board
   def self.startig_board
     board = Board.new
     (1..7).each do |i|
-      board[[0,i]] = Piece.new(board, :white, [0,i], false) if i % 2 != 0
-      board[[2,i]] = Piece.new(board, :white, [1,i], false) if i % 2 != 0
-      board[[6,i]] = Piece.new(board, :black, [6,i], false) if i % 2 != 0
+      board[[0,i]] = Piece.new(board, :black, [0,i], false) if i % 2 != 0
+      board[[2,i]] = Piece.new(board, :black, [1,i], false) if i % 2 != 0
+      board[[6,i]] = Piece.new(board, :white, [6,i], false) if i % 2 != 0
     end
     (0..7).each do |i|
-      board[[1,i]] = Piece.new(board, :white, [1,i], false) if i % 2 == 0
-      board[[5,i]] = Piece.new(board, :black, [0,i], false) if i % 2 == 0
-      board[[7,i]] = Piece.new(board, :black, [0,i], false) if i % 2 == 0
+      board[[1,i]] = Piece.new(board, :black, [1,i], false) if i % 2 == 0
+      board[[5,i]] = Piece.new(board, :white, [0,i], false) if i % 2 == 0
+      board[[7,i]] = Piece.new(board, :white, [0,i], false) if i % 2 == 0
     end
 
     board
@@ -39,7 +39,9 @@ class Board
   end
 
   def move(from_pos, to_pos, color)
-    if self[from_pos] && self[from_pos].color == color
+    p "now i am here"
+    p self[from_pos].pos
+    if self[from_pos].color == color
       self[from_pos].move(to_pos)
       self[from_pos], self[to_pos] = nil, self[from_pos]
       true
@@ -73,9 +75,43 @@ class Board
     end
   end
 
-
-  def make_leagal_move(from_pos, to_pos, color)
-      self.move(from_pos, to_pos, color)
+  def move_puts_player_in_check?(from_pos, to_pos, color)
+    p "check"
+    p from_pos
+    p to_pos
+    board_copy = self.dup
+    board_copy.print_board
+    board_copy.move(from_pos, to_pos, color)
+    board_copy.print_board
   end
+
+  def make_legal_move(from_pos, to_pos, color)
+    p "MAKE LEAGAL MOVE"
+    p from_pos
+    p to_pos
+    if move_puts_player_in_check?(from_pos, to_pos, color)
+      return false
+    else
+      self.move(from_pos, to_pos, color)
+      true
+    end
+  end
+
+   def dup
+     new_board = Board.new
+
+     self.board.each_with_index do |row,row_i|
+       row.each_with_index do |square,col_i|
+         unless square.nil?
+           p "try"
+           p board[row_i, col_i].color
+           new_board[[row_i, col_i]] = Piece.new(board, board[[row_i, col_i]].color, board[[row_i, col_i]].pos, board.king)
+         end
+       end
+     end
+
+     new_board
+   end
+
 
 end

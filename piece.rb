@@ -1,4 +1,6 @@
 class Piece
+
+  LEGAL_MOVE = [[-1, 1],[-1, -1],[1, 1],[1, -1]]
   attr_accessor :board, :pos, :color
 
   def initialize(board, color, pos, king = false)
@@ -37,25 +39,16 @@ class Piece
   def check_next_squre?(to_pos)
     if direction(to_pos) == :right && diff(to_pos) == :up
       next_x, next_y = pos[0] - 1, pos[1] + 1
-      return false if board[[next_x, next_y]].nil?
-      return false if board[[next_x, next_y]].color == color
     elsif direction(to_pos) == :left && diff(to_pos) == :up
       next_x, next_y = pos[0] -1, pos[1] - 1
-      return false if board[[next_x, next_y]].nil?
-      return false if board[[next_x, next_y]].color == color
-
-    end
-    if direction(to_pos) == :right && diff(to_pos) == :down
+    elsif direction(to_pos) == :right && diff(to_pos) == :down
       next_x, next_y = pos[0] + 1, pos[1] + 1
-      return false if board[[next_x, next_y]].nil?
-      return false if board[[next_x, next_y]].color == color
     elsif direction(to_pos) == :left && diff(to_pos) == :down
       next_x, next_y = pos[0]  + 1, pos[1] - 1
-      return false if board[[next_x, next_y]].nil?
-      return false if board[[next_x, next_y]].color == color
-
     end
-    true
+    return false if board[[next_x, next_y]].nil?
+    return false if board[[next_x, next_y]].color == color
+    return true
   end
 
   def direction(to_pos)
@@ -74,31 +67,18 @@ class Piece
       return :down
     end
   end
-end
 
-class Board
-  attr_reader :board
-
-  def initialize
-    @board = Array.new(8) {Array.new(8)}
+  def move(to_pos)
+    current_pos = pos
+    if perform_jump(to_pos)
+      current_pos = to_pos
+    elsif perform_jump(to_pos)
+      current_pos = to_pos
+    else
+      raise "Invalid move"
+    end
   end
 
-  def [](pos)
-    i, j = pos
-    board[i][j]
-  end
-
-  def []=(pos, value)
-    i, j = pos
-    board[i][j] = value
-  end
-
-  def self.startig_board
-    board = Board.new
-
-  end
-
-  def valid_move(to_pos)
-    to_pos[0].between?(0,7) && to_pos[1].between?(0,7)
+  def perform_moves!(move_sequence)
   end
 end
